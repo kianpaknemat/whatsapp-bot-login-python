@@ -1,0 +1,7 @@
+venv
+session.json
+session.pkl
+instagram_bot.log
+responded_messages.json
+.env
+processed_messages.json
