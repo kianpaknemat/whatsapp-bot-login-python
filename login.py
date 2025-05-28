@@ -192,16 +192,3 @@ def whatsapp_login(phone_number):
         print(f"❌ An error occurred during login: {str(e)}")
         driver.quit()
         return None
-
-
-# Example usage function (for testing purposes)
-def example_usage():
-    phone_number = "9123456789"  # Replace with actual phone number
-    driver = whatsapp_login(phone_number)
-
-    if driver:
-        print("🎉 WhatsApp Web is ready to use!")
-        # Your WhatsApp automation code goes here
-        # driver.quit()  # Uncomment when done
-    else:
-        print("💥 Failed to initialize WhatsApp Web")
