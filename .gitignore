@@ -1,3 +1,8 @@
 venv
 .env
 session
+node_modules
+.wwebjs_auth
+package-lock.json
+package.json
+

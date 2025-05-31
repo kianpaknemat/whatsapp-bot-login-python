@@ -1,7 +1,10 @@
-from login import whatsapp_login,send_whatsapp_message
+from models.login import whatsapp_login
 from dotenv import load_dotenv
 import os
 import APIs
+import asyncio
+import websocket
+import json
 
 
 load_dotenv()
@@ -17,10 +20,27 @@ prompt = "در مورد آروند توضیح بده و بگو چیکار میک
 
 driver = whatsapp_login(phone)
 
-response = APIs.generate(agent, prompt, token)
-response = response.text
+
+
+
+def send_whatsapp_message(phone: str, text: str):
+    ws = websocket.create_connection("ws://localhost:3000")
+
+    message = {
+        "phone": phone,
+        "text": text
+    }
+
+    ws.send(json.dumps(message))
+    ws.close()
+
+
+# تست
+
 if driver:
-    send_whatsapp_message(driver, user_phone, response)
+    print(user_phone)
+    send_whatsapp_message("989382885712", "سلام از طرف پایتون!")
+
 
 
 

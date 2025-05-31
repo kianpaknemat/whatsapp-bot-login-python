@@ -7,12 +7,41 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import time
 
-BASE_SESSION_DIR = "session"
+BASE_SESSION_DIR = "./session/"
+
+
+def force_whatsapp_language_english(driver):
+    driver.get("https://web.whatsapp.com")  # باید اول صفحه لود بشه
+
+    # حذف کوکی زبان قبلی
+    try:
+        driver.delete_cookie("wa_web_lang_pref")
+    except:
+        pass
+
+    # ست کردن کوکی روی هر دو دامنه ممکن (تا جایی که دسترسی داریم)
+    driver.add_cookie({
+        "name": "wa_web_lang_pref",
+        "value": "en",
+        "domain": ".web.whatsapp.com",
+        "path": "/"
+    })
+
+    driver.add_cookie({
+        "name": "wa_web_lang_pref",
+        "value": "en",
+        "domain": ".whatsapp.com",
+        "path": "/"
+    })
+
+    # رفرش دوباره برای اعمال زبان
+    driver.get("https://web.whatsapp.com")
 
 
 def setup_driver_with_session(phone_number):
     session_path = os.path.join(BASE_SESSION_DIR, phone_number)
     chrome_options = Options()
+
 
     if not os.path.exists(BASE_SESSION_DIR):
         os.makedirs(BASE_SESSION_DIR)
@@ -31,7 +60,10 @@ def check_existing_session(driver, wait_time=4):
     """Check if user is already logged in with existing session"""
     try:
         print("🔍 Checking for existing session...")
-        driver.get("https://web.whatsapp.com/")
+
+        driver.get("https://web.whatsapp.com")
+        force_whatsapp_language_english(driver)
+
         wait = WebDriverWait(driver, wait_time)
 
         # Wait a bit for the page to load
@@ -97,7 +129,7 @@ def confirm_session_saved(phone_number):
 def login_with_phone_number(driver, phone_number):
     """Login using phone number when no session exists"""
     print("Starting phone number login process...")
-    wait = WebDriverWait(driver, 5)
+    wait = WebDriverWait(driver, 180)
 
     try:
         # Click login with phone number button
@@ -136,7 +168,6 @@ def login_with_phone_number(driver, phone_number):
         chars = code_container.find_elements(By.CSS_SELECTOR, "span.x2b8uid")
         code_from_spans = "".join([c.text for c in chars])
         print("Verification code:", code_from_spans)
-        # Verify login success and save session
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-testid='Chat-list']")))
         print("✅ Login successful! Session has been saved.")
         confirm_session_saved(phone_number)
@@ -171,9 +202,10 @@ def whatsapp_login(phone_number):
         # Step 3: If user is not in session, use phone number for login
         print("🔐 No existing session found. Proceeding with phone number login...")
 
-        # Make sure we're on WhatsApp Web page
-        driver.get("https://web.whatsapp.com/")
-        time.sleep(3)  # Give page time to load
+        driver.get("https://web.whatsapp.com")
+        force_whatsapp_language_english(driver)
+
+        time.sleep(3)
 
         login_success = login_with_phone_number(driver, phone_number)
 
@@ -193,28 +225,28 @@ def whatsapp_login(phone_number):
 
 
 
-def send_whatsapp_message(driver, phone_number, message, wait_time=10):
-    url = f"https://web.whatsapp.com/send?phone={phone_number[1:]}"
-    driver.get(url)
-
-    wait = WebDriverWait(driver, wait_time)
-
-    try:
-        msg_box = wait.until(EC.presence_of_element_located((By.XPATH, "//div[@contenteditable='true' and @data-tab='10']")))
-        time.sleep(3)
-        msg_box.click()
-        msg_box.clear()
-        msg_box.send_keys(message)
-
-        send_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-tab='11']")))
-        send_button.click()
-
-        print(f"✅ پیام به {phone_number} ارسال شد.")
-        return True
-
-    except Exception as e:
-        print(f"❌ ارسال پیام با خطا مواجه شد: {e}")
-        return False
+# def send_whatsapp_message(driver, phone_number, message, wait_time=10):
+#     url = f"https://web.whatsapp.com/send?phone={phone_number[1:]}"
+#     driver.get(url)
+#
+#     wait = WebDriverWait(driver, wait_time)
+#
+#     try:
+#         msg_box = wait.until(EC.presence_of_element_located((By.XPATH, "//div[@contenteditable='true' and @data-tab='10']")))
+#         time.sleep(3)
+#         msg_box.click()
+#         msg_box.clear()
+#         msg_box.send_keys(message)
+#
+#         send_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-tab='11']")))
+#         send_button.click()
+#
+#         print(f"✅ پیام به {phone_number} ارسال شد.")
+#         return True
+#
+#     except Exception as e:
+#         print(f"❌ ارسال پیام با خطا مواجه شد: {e}")
+#         return False
 
 
 
