@@ -2,9 +2,9 @@ venv
 .env
 session
 node_modules
-session
 package-lock.json
 package.json
+.wwebjs_cache
 
 # managed
 **.data.json
