@@ -2,7 +2,12 @@ venv
 .env
 session
 node_modules
-.wwebjs_auth
+session
 package-lock.json
 package.json
 
+# managed
+**.data.json
+**.node-persist**
+**_IGNORE_**
+# end managed

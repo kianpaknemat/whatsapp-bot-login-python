@@ -225,28 +225,3 @@ def whatsapp_login(phone_number):
 
 
 
-# def send_whatsapp_message(driver, phone_number, message, wait_time=10):
-#     url = f"https://web.whatsapp.com/send?phone={phone_number[1:]}"
-#     driver.get(url)
-#
-#     wait = WebDriverWait(driver, wait_time)
-#
-#     try:
-#         msg_box = wait.until(EC.presence_of_element_located((By.XPATH, "//div[@contenteditable='true' and @data-tab='10']")))
-#         time.sleep(3)
-#         msg_box.click()
-#         msg_box.clear()
-#         msg_box.send_keys(message)
-#
-#         send_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-tab='11']")))
-#         send_button.click()
-#
-#         print(f"✅ پیام به {phone_number} ارسال شد.")
-#         return True
-#
-#     except Exception as e:
-#         print(f"❌ ارسال پیام با خطا مواجه شد: {e}")
-#         return False
-
-
-
