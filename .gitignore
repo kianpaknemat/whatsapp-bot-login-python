@@ -11,3 +11,5 @@ package.json
 **.node-persist**
 **_IGNORE_**
 # end managed
+js/API.js
+APIs.py
